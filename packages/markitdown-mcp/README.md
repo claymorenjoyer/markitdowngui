@@ -54,7 +54,7 @@ Once mounted, all files under data will be accessible under `/workdir` in the co
 
 It is recommended to use the Docker image when running the MCP server for Claude Desktop.
 
-Follow [these instrutions](https://modelcontextprotocol.io/quickstart/user#for-claude-desktop-users) to access Claude's `claude_desktop_config.json` file.
+Follow [these instructions](https://modelcontextprotocol.io/quickstart/user#for-claude-desktop-users) to access Claude's `claude_desktop_config.json` file.
 
 Edit it to include the following JSON entry:
 
