@@ -1,0 +1,2 @@
+markitdown[all]>=0.1.5
+PySide6>=6.6
