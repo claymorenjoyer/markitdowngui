@@ -1,0 +1,82 @@
+name: Build GUI
+
+on:
+  push:
+    tags:
+      - "gui-v*"
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    name: Build (${{ matrix.asset }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-13       # Intel
+            asset: macos-intel
+          - os: macos-latest    # Apple Silicon
+            asset: macos-arm64
+          - os: windows-latest
+            asset: windows
+          - os: ubuntu-latest
+            asset: linux
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r markitdown-gui/requirements.txt pyinstaller
+
+      - name: Build with PyInstaller
+        working-directory: markitdown-gui
+        run: pyinstaller build.spec --noconfirm --clean
+
+      - name: Package (macOS)
+        if: runner.os == 'macOS'
+        working-directory: markitdown-gui
+        run: ditto -c -k --keepParent dist/MarkItDownGUI.app "MarkItDownGUI-${{ matrix.asset }}.zip"
+
+      - name: Package (Linux)
+        if: runner.os == 'Linux'
+        working-directory: markitdown-gui
+        run: cd dist && zip -r "../MarkItDownGUI-${{ matrix.asset }}.zip" MarkItDownGUI
+
+      - name: Package (Windows)
+        if: runner.os == 'Windows'
+        working-directory: markitdown-gui
+        shell: pwsh
+        run: Compress-Archive -Path dist/MarkItDownGUI -DestinationPath "MarkItDownGUI-${{ matrix.asset }}.zip"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MarkItDownGUI-${{ matrix.asset }}
+          path: markitdown-gui/MarkItDownGUI-${{ matrix.asset }}.zip
+          if-no-files-found: error
+
+  release:
+    name: Publish release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/gui-v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create / update GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: MarkItDown GUI ${{ github.ref_name }}
+          generate_release_notes: true
+          files: artifacts/**/*.zip
