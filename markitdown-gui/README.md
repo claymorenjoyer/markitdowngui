@@ -13,7 +13,7 @@ Pre-built apps for each platform are attached to the
 
 | Platform | File |
 | --- | --- |
-| macOS | `MarkItDownGUI-macos.zip` (unzip → `MarkItDownGUI.app`) |
+| macOS (Apple Silicon) | `MarkItDownGUI-macos-arm64.zip` (unzip → `MarkItDownGUI.app`) |
 | Windows | `MarkItDownGUI-windows.zip` (unzip → `MarkItDownGUI.exe`) |
 | Linux | `MarkItDownGUI-linux.zip` (unzip → run `MarkItDownGUI`) |
 

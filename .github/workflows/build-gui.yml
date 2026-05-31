@@ -14,8 +14,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: macos-13       # Intel
-            asset: macos-intel
           - os: macos-latest    # Apple Silicon
             asset: macos-arm64
           - os: windows-latest
