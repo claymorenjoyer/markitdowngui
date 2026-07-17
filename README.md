@@ -4,7 +4,113 @@
 ![PyPI - Downloads](https://img.shields.io/pypi/dd/markitdown)
 [![Built by AutoGen Team](https://img.shields.io/badge/Built%20by-AutoGen%20Team-blue)](https://github.com/microsoft/autogen)
 
-> **🖥️ MarkItDown GUI** — This fork adds a cross-platform desktop GUI for MarkItDown. Drag-and-drop files, batch-convert, live Markdown preview, and one-click export. No command line needed. → See [`markitdown-gui/`](markitdown-gui) for the app and [Releases](../../releases) for pre-built downloads.
+---
+
+## 🖥️ MarkItDown GUI
+
+**A cross-platform desktop application that brings MarkItDown to everyone — no command line required.**
+
+Convert PDFs, Word documents, Excel sheets, PowerPoint decks, HTML pages, images (via OCR), audio files (via transcription), and more into clean, structured Markdown. Built for researchers, content teams, technical writers, and anyone preparing documents for LLMs and AI workflows.
+
+### Why a GUI?
+
+[MarkItDown](https://github.com/microsoft/markitdown) is an excellent Python library, but using it demands comfort with terminals, Python environments, and scripting. That limits who can benefit from it.
+
+**This project bridges that gap.** It wraps MarkItDown in a native desktop interface that lets you:
+
+- **Drag and drop** files instead of typing paths
+- **Batch-convert** dozens of documents in one click
+- **Preview** the Markdown output instantly — rendered side-by-side with the raw source
+- **Save** individual results or export an entire batch to a folder
+- **Copy** converted Markdown straight to the clipboard for pasting into ChatGPT, Claude, or your notes
+
+| Without GUI | With MarkItDown GUI |
+|---|---|
+| Write Python scripts per batch | Click "Add Files" or drag-and-drop |
+| Manually handle errors in code | See per-file status inline (Done / Error) |
+| No live preview | Side-by-side Markdown source + rendered preview |
+| CLI-only, context-switch to view output | Everything in one window |
+
+### Download
+
+Pre-built apps for each platform are attached to the [Releases](../../releases) page:
+
+| Platform | File |
+| --- | --- |
+| macOS (Apple Silicon) | `MarkItDownGUI-macos-arm64.zip` (unzip → `MarkItDownGUI.app`) |
+| Windows | `MarkItDownGUI-windows.zip` (unzip → `MarkItDownGUI.exe`) |
+| Linux | `MarkItDownGUI-linux.zip` (unzip → run `MarkItDownGUI`) |
+
+> **Note:** These builds are **not code-signed**, so the OS may warn you. **macOS:** right-click → Open → Open. **Windows:** More info → Run anyway.
+
+### GUI Features
+
+- Broad format support (inherits all MarkItDown converters)
+- Batch conversion with live progress
+- Non-blocking UI — conversion runs on a background thread
+- Drag-and-drop file input
+- URL support — paste any HTTP/HTTPS URL
+- Markdown source + rendered preview tabs
+- Save individual `.md` files or export all to folder
+- Copy to clipboard
+- Configurable options: 3rd-party plugins, keep data URIs
+
+### Run from Source
+
+Requires Python 3.10+.
+
+```bash
+cd markitdown-gui
+./run.sh            # macOS / Linux
+```
+
+Windows:
+```bat
+cd markitdown-gui
+python -m venv .venv
+.venv\Scripts\python -m pip install -r requirements.txt
+.venv\Scripts\python app\main.py
+```
+
+### Build
+
+```bash
+cd markitdown-gui
+./build.sh          # output in dist/
+```
+
+CI builds all three platforms via `.github/workflows/build-gui.yml` on `gui-v*` tags.
+
+### GUI Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **UI Framework** | [PySide6](https://pypi.org/project/PySide6/) (Qt 6) |
+| **Conversion Engine** | MarkItDown |
+| **Concurrency** | Qt `QThreadPool` + `QRunnable` |
+| **Packaging** | PyInstaller (standalone app bundles) |
+| **CI / CD** | GitHub Actions (multi-platform builds) |
+
+### GUI Architecture
+
+```
+markitdown-gui/
+├── app/
+│   ├── main.py         # Entry point, MainWindow, UI, menus, self-test
+│   ├── converter.py    # Thin wrapper: ConversionItem, ConverterOptions, convert_item()
+│   └── worker.py       # Background QRunnable — off-thread conversion, Qt signals
+├── build.spec          # PyInstaller spec (collects hidden imports, ML models, etc.)
+├── build.sh / run.sh   # Convenience scripts
+└── requirements.txt    # markitdown[all], PySide6
+```
+
+- **`converter.py`** — plain Python, no Qt dependency. Wraps MarkItDown's `convert()`.
+- **`worker.py`** — bridges the converter into Qt's thread model via `QRunnable` + signals. Conversion runs off the UI thread so the interface stays responsive.
+- **`main.py`** — owns all UI state: file queue, drag-and-drop, options, progress bar, source/preview tabs, save/export.
+
+---
+
+## Original MarkItDown Library
 
 > [!IMPORTANT]
 > MarkItDown performs I/O with the privileges of the current process. Like open() or requests.get(), it will access resources that the process itself can access. Sanitize your inputs in untrusted environments, and call the narrowest `convert_*` function needed for your use case (e.g., `convert_stream()`, or `convert_local()`). See the [Security Considerations](#security-considerations) section of the documentation for more information.
