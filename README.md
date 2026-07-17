@@ -31,6 +31,8 @@ Convert PDFs, Word documents, Excel sheets, PowerPoint decks, HTML pages, images
 | No live preview | Side-by-side Markdown source + rendered preview |
 | CLI-only, context-switch to view output | Everything in one window |
 
+![MarkItDown GUI screenshot](markitdown-gui/screenshot.png)
+
 ### Download
 
 Pre-built apps for each platform are attached to the [Releases](../../releases) page:

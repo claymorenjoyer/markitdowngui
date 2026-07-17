@@ -27,7 +27,7 @@ It's built for the workflows real people have: migrating documentation, preparin
 | No live preview | Side-by-side Markdown source + rendered preview |
 | CLI-only, context-switch to view output | Everything in one window |
 
----
+![MarkItDown GUI screenshot](screenshot.png)
 
 ## Download
 
