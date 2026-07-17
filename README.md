@@ -1,8 +1,10 @@
-# MarkItDown
+# MarkItDown + GUI
 
 [![PyPI](https://img.shields.io/pypi/v/markitdown.svg)](https://pypi.org/project/markitdown/)
 ![PyPI - Downloads](https://img.shields.io/pypi/dd/markitdown)
 [![Built by AutoGen Team](https://img.shields.io/badge/Built%20by-AutoGen%20Team-blue)](https://github.com/microsoft/autogen)
+
+> **🖥️ MarkItDown GUI** — This fork adds a cross-platform desktop GUI for MarkItDown. Drag-and-drop files, batch-convert, live Markdown preview, and one-click export. No command line needed. → See [`markitdown-gui/`](markitdown-gui) for the app and [Releases](../../releases) for pre-built downloads.
 
 > [!IMPORTANT]
 > MarkItDown performs I/O with the privileges of the current process. Like open() or requests.get(), it will access resources that the process itself can access. Sanitize your inputs in untrusted environments, and call the narrowest `convert_*` function needed for your use case (e.g., `convert_stream()`, or `convert_local()`). See the [Security Considerations](#security-considerations) section of the documentation for more information.
